@@ -1,0 +1,82 @@
+<html>
+<head>
+		<script type="text/javascript">
+			function c255ToHex(n)
+			{
+				    var hexString = "0123456789ABCDEF";
+				    firstpos = (n & 0xF0) >> 4;
+				    secondpos = (n & 0x0F);
+				    return hexString[firstpos] + hexString[secondpos];
+			}
+			function rgb2color(r,g,b)
+			{
+				return '#' + c255ToHex(r) + c255ToHex(g) + c255ToHex(b);
+			}
+
+			
+			var i,r,g,b = g = r = i = 0;
+			var frequency = 0.001;
+			var amp = 90;
+			var center = 90;
+			var rmax = Math.floor(0.1*Math.PI / frequency);
+			var decalage = 1.5*Math.PI / frequency;
+
+			state = 1;
+			i = decalage;
+			function incrfreq(c)
+			{
+
+				if (c < decalage)
+				{
+					state = -state;
+				}
+				if (c > rmax + decalage)
+				{
+					state = -state;
+				}
+
+				c = c + state;
+
+				return c;
+
+			}
+
+			function incrementColor(c)
+			{
+				/* add a counter to slow down printing without changing rate */
+				if (c < rmax)
+					return c + 1;
+				else
+					return 0;
+			}
+
+			function colorchange()
+			{
+				i = incrfreq(i);
+				v = Math.sin(frequency*i) * amp + center;
+			    r = Math.sin(frequency*i + 0) * amp + center;
+				g = Math.sin(frequency*i + 2) * amp + center;
+				b = Math.sin(frequency*i + 4) * amp + center;
+				color = rgb2color(r,g,b);
+
+				document.getElementById("test").style.color = 'black';
+				document.getElementById("test").innerHTML = color;
+				document.getElementById("lol").style.color = 'black';
+				document.getElementById("lol").innerHTML = rmax.toString();
+				document.body.style.background = color;
+			}
+			function load()
+			{
+				/* 40ms is 25hz :) 1000/25*/
+				window.setInterval(colorchange, 30);	
+			}
+		</script>
+</head>
+<body onload="load();">
+			<div id="lol">
+		</div>
+	<div id="test">
+
+	</div>
+</body>
+</html>
